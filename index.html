@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR 코드 생성기</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f0f0f0; }
+        h1 { color: #333; }
+        input[type="text"] { width: 80%; max-width: 400px; padding: 12px; font-size: 16px; margin: 10px; }
+        button { padding: 12px 24px; font-size: 16px; margin: 10px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 5px; }
+        button:hover { background-color: #45a049; }
+        #qrcode { margin: 30px auto; padding: 20px; background: white; display: inline-block; border: 2px solid #ddd; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>QR 코드 생성기</h1>
+    <input type="text" id="text" placeholder="텍스트나 URL을 입력하세요" />
+    <br/>
+    <button onclick="generateQR()">QR 코드 생성</button>
+    <button onclick="downloadQR()" id="downloadBtn" style="display:none;">QR 코드 다운로드</button>
+    <div id="qrcode"></div>
+
+    <script>
+        let qrCodeInstance = null;
+
+        function generateQR() {
+            const text = document.getElementById('text').value.trim();
+            if (!text) { alert('텍스트나 URL을 입력해주세요!'); return; }
+            document.getElementById('qrcode').innerHTML = "";
+            qrCodeInstance = new QRCode(document.getElementById('qrcode'), {
+                text: text, width: 256, height: 256, colorDark: "#000000", colorLight: "#ffffff"
+            });
+            document.getElementById('downloadBtn').style.display = "inline-block";
+        }
+
+        function downloadQR() {
+            if (!qrCodeInstance) { alert('먼저 QR 코드를 생성해주세요!'); return; }
+            const canvas = document.querySelector('#qrcode canvas');
+            const link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
